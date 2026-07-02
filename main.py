@@ -22,8 +22,7 @@ logger = logging.getLogger(__name__)
 # Active Server-Sent Events clients
 sse_queues = set()
 
-# Initialize DB on start
-database.init_db()
+# DB will be initialized on startup via handle_startup()
 
 # Custom queues for dispatching events to browser client
 async def broadcast_event(event_type, data):
@@ -542,6 +541,9 @@ async def simulator_background_loop():
 # ==========================================
 
 async def handle_startup():
+    # Initialize DB at startup runtime (safe for serverless builds)
+    database.init_db()
+    
     # Start the background simulator / Gmail polling loop
     asyncio.create_task(simulator_background_loop())
     logger.info("Startup sequence finished.")
