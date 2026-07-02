@@ -7,6 +7,9 @@ load_dotenv()
 PORT = int(os.getenv("PORT", 8000))
 HOST = os.getenv("HOST", "127.0.0.1")
 DATABASE_PATH = os.getenv("DATABASE_PATH", "qaricrm.db")
+if os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+    DATABASE_PATH = "/tmp/qaricrm.db"
+
 SIMULATOR_INTERVAL_SECONDS = int(os.getenv("SIMULATOR_INTERVAL_SECONDS", 40))
 
 # Environment-based credentials. Database settings will take priority over these.
