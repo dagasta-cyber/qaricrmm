@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import random
+import os
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse, RedirectResponse, PlainTextResponse, Response
 from starlette.routing import Route, Mount
@@ -21,6 +22,10 @@ logger = logging.getLogger(__name__)
 
 # Active Server-Sent Events clients
 sse_queues = set()
+
+# Absolute path for static files directory (safe for serverless runtimes)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 # DB will be initialized on startup via handle_startup()
 
@@ -579,7 +584,7 @@ routes = [
     Route("/api/simulator/toggle", toggle_simulator, methods=["POST"]),
     Route("/api/simulator/trigger", trigger_simulated_message, methods=["POST"]),
     # Serve Frontend SPA
-    Mount("/", app=StaticFiles(directory="static", html=True), name="static")
+    Mount("/", app=StaticFiles(directory=STATIC_DIR, html=True), name="static")
 ]
 
 app = Starlette(
