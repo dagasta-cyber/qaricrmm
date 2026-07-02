@@ -1,0 +1,26 @@
+# Local SQLite databases
+*.db
+*.db-journal
+*.db-wal
+
+# Local environment secret credentials
+.env
+
+# Python compilation files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Scratch and log files
+scratch/
+scratch_output.txt
+*.log

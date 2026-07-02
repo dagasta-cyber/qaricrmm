@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QariCrm | Unified Customer Inbox & CRM</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">Q</div>
+                <span class="logo-text">Qari<span>Crm</span></span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#inbox" class="nav-item active" id="nav-inbox">
+                    <i data-lucide="message-square"></i>
+                    <span>Unified Inbox</span>
+                    <span class="badge" id="unread-count" style="display: none;">0</span>
+                </a>
+                <a href="#contacts" class="nav-item" id="nav-contacts">
+                    <i data-lucide="users"></i>
+                    <span>Contacts</span>
+                </a>
+                <a href="#pipeline" class="nav-item" id="nav-pipeline">
+                    <i data-lucide="kanban-square"></i>
+                    <span>Sales Pipeline</span>
+                </a>
+                <a href="#settings" class="nav-item" id="nav-settings">
+                    <i data-lucide="settings"></i>
+                    <span>Integrations</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="pulse-dot green"></span>
+                    <span class="status-text">Simulator Live</span>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Topbar Header -->
+            <header class="topbar">
+                <h1 class="page-title" id="page-title">Unified Inbox</h1>
+                <div class="topbar-actions">
+                    <div class="lang-selector">
+                        <button class="lang-btn active" id="lang-btn-en" onclick="switchLanguage('en')">EN</button>
+                        <button class="lang-btn" id="lang-btn-ar" onclick="switchLanguage('ar')">عربي</button>
+                    </div>
+                    <div id="connection-status" class="connection-badge connected">
+                        <i data-lucide="wifi"></i>
+                        <span>Connected</span>
+                    </div>
+                    <button class="btn btn-primary" id="header-action-btn" style="display: none;">
+                        <i data-lucide="plus"></i>
+                        <span>Add Contact</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Dynamic Content Viewport -->
+            <section class="content-viewport" id="content-viewport">
+                <!-- Content will be injected here via app.js -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Contact Modal -->
+    <div class="modal-overlay" id="contact-modal">
+        <div class="modal-card glass">
+            <div class="modal-header">
+                <h2>Create New Contact</h2>
+                <button class="close-btn" onclick="document.getElementById('contact-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="c-name">Full Name</label>
+                    <input type="text" id="c-name" required placeholder="e.g. Robert Downey">
+                </div>
+                <div class="form-group">
+                    <label for="c-email">Email Address</label>
+                    <input type="email" id="c-email" placeholder="e.g. robert@stark.com">
+                </div>
+                <div class="form-group">
+                    <label for="c-phone">Phone Number (with country code)</label>
+                    <input type="text" id="c-phone" placeholder="e.g. +14155552671">
+                </div>
+                <div class="form-group">
+                    <label for="c-status">Lead Stage</label>
+                    <select id="c-status">
+                        <option value="lead">Lead</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="customer">Customer</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('contact-modal').classList.remove('active')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Contact</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Deal Modal -->
+    <div class="modal-overlay" id="deal-modal">
+        <div class="modal-card glass">
+            <div class="modal-header">
+                <h2>Create Sales Deal</h2>
+                <button class="close-btn" onclick="document.getElementById('deal-modal').classList.remove('active')">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="deal-form">
+                <div class="form-group">
+                    <label for="d-name">Deal Name</label>
+                    <input type="text" id="d-name" required placeholder="e.g. Stark Industries SaaS">
+                </div>
+                <div class="form-group">
+                    <label for="d-value">Deal Value ($)</label>
+                    <input type="number" id="d-value" required step="0.01" placeholder="e.g. 5000">
+                </div>
+                <div class="form-group">
+                    <label for="d-contact">Associated Contact</label>
+                    <select id="d-contact" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="d-stage">Pipeline Stage</label>
+                    <select id="d-stage">
+                        <option value="lead">Lead Column</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="proposal">Proposal Sent</option>
+                        <option value="negotiation">Negotiation</option>
+                        <option value="won">Won (Closed)</option>
+                        <option value="lost">Lost</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('deal-modal').classList.remove('active')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Deal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js?v=1.0.3"></script>
+    <script src="js/app.js?v=1.0.3"></script>
+</body>
+</html>
